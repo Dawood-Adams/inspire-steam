@@ -33,5 +33,3 @@ print(f"New MPESA balance is: ", new_balance)
 end = "Kes"
 new_balance_complete = str(new_balance) + str(end)
 print(f" CONFIRMED, you have received {amount_added} from Phillip.Your new MPESA balance is {new_balance_complete} ")
-
-
