@@ -15,6 +15,6 @@ print(f"The nth term is :{nth_term}")
 Sn = (n/2) * (2*a+(n - 1)*d)
 print(f"The sum of the numbers in the sequence is :{Sn}")
 
-r = common_ratio
-nth_term2 = a(r**(n - 1))
+nth_term2 = a * (r**(n - 1))
 print(f"The nth term of the Geometric progression is:{nth_term2}")
+# calculating the Geometric progression
