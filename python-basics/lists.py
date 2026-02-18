@@ -18,3 +18,13 @@ print(len(new_friends))
 # New list of students
 students = friends + new_friends
 print(students)
+students.pop()
+print(students)
+students.insert(5,"Jenny")
+print(students)
+students.insert(7,"Veronica")
+print(students)
+students.remove("Joel")
+print(students)
+new_students = students.copy()
+print(new_students)
