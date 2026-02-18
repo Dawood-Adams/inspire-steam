@@ -5,6 +5,6 @@
 sum = 0
 for x in range (0,100,2):
     sum = sum + x
-print(f"mean : {sum / 10}")
+print(f"mean : {sum / 50}")
 
 print(3%2)

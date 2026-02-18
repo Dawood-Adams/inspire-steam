@@ -4,19 +4,11 @@
 import math
 
 for x in range (0,360,30):
-    print(math.cos(x))
-    
-for x in range (0,360,30):
-    print(math.sin(x))
-
-for x in range (0,360,30):
-    print(math.tan(x))
-
+    print(math.cos(x),math.sin(x),math.tan(x))
 
 for i in range (10,0,-1):
     print(i)
 
 for a in range(-180,180,30):
-    print(math.tan(a))
-    print(math.cos(a))
-    print(math.sin(a))
+    print(math.tan(a) , math.cos(a) , math.sin(a))
+    

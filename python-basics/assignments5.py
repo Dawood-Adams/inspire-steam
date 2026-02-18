@@ -11,10 +11,16 @@ if salary <= 50000:
     print(f"The net salary is:", {net_salary})
     print(f"The tax is:", {tax})
 
-elif salary for range(50000,100000)
+elif salary >50000 <100000:
     tax = (0.045 * salary)
     net_salary = salary - tax
     print(f"The gross salary is:", {salary})
     print(f"The net salary is:", {net_salary})
     print(f"The tax is:", {tax})
 
+elif salary >100000:
+    tax = (0.045 * salary)
+    net_salary = salary - tax
+    print(f"The gross salary is:", {salary})
+    print(f"The net salary is:", {net_salary})
+    print(f"The tax is:", {tax})
