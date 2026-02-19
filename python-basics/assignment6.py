@@ -1,6 +1,6 @@
 # Name : Dawood Adams
 # Date : 17/02/2026
-# Program to display diamond using triangles
+# Program to display a diamond using a diamond
 # write program to display quadratic equation
 
 
