@@ -36,10 +36,12 @@ class FighterCharacter:
         print(f"Game Log: {self.character_role} deals a damage of {character_damage} to the {opponent.character_role}.")
 
     def takle(self, opponent):
+        
+        opponent.character_speed = opponent.character_speed - self.character_damage
         # implement this so that the opponent's charater_speed is reduced by the damager dealt by the fighter
         # For instance, if the ninja's speed is 120, a takle from the warrior should reduce their speed to 80
         # Remember to remove the pass below before running your trial
-        pass
+
 
 
 
@@ -52,6 +54,7 @@ warrior_character.report_status()
 
 ninja_character.run("Up")
 ninja_character.kick(warrior_character)
+warrior_character.takle(ninja_character)
 
 ninja_character.report_status()
 warrior_character.report_status()

@@ -8,7 +8,7 @@ def cook_eggs():
     fire = True
     eggs = 2
 
-    print(f"The pan is {pan},and the fire is {fire},  add {oil} amount of oil and cook {eggs} eggs")
+    print(f"The pan is {pan},and the fire is {fire},  add {oil} of oil and cook {eggs} eggs")
 
 print ("Here is statement 1")
 
