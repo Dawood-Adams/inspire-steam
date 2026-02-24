@@ -17,6 +17,8 @@ class Animal():
     def eat(self,food):
         print(f"The animal eats {food}")
 
+
+
 class Dog(Animal):
 
     def __init__(self,species,weight,food):
@@ -25,17 +27,13 @@ class Dog(Animal):
         self.height = height
         self.breed = breed
 
-    def bark(self,bark):
+    def bark(self):
         print(f"The dog says woof woof")
 
 class Horse(Animal):
 
     def __init__(self,species,weight,food):
-        
-        self.species = species
-        self.weight = weight
-        self.food = food
+        super().__init__(species,weight,food,color,breed)
 
-        
     def neighs(self):
         print("The horse says NEIGH NEIGH!")
