@@ -1,11 +1,28 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import ttk, messagebox
+import json
+import os
 
-# Store students in a list
-students = []
+FILE_NAME = "students.json"
 
 # ----------------------------
-# Register Student Function
+# Load Students from File
+# ----------------------------
+def load_students():
+    if os.path.exists(FILE_NAME):
+        with open(FILE_NAME, "r") as file:
+            return json.load(file)
+    return []
+
+# ----------------------------
+# Save Students to File
+# ----------------------------
+def save_students():
+    with open(FILE_NAME, "w") as file:
+        json.dump(students, file, indent=4)
+
+# ----------------------------
+# Register Student
 # ----------------------------
 def register_student():
     name = name_entry.get()
@@ -13,11 +30,10 @@ def register_student():
     phone = phone_entry.get()
     course = course_entry.get()
 
-    if name == "" or student_id == "" or phone == "" or course == "":
+    if not name or not student_id or not phone or not course:
         messagebox.showwarning("Input Error", "All fields are required!")
         return
-
-    # Check if ID already exists
+    
     for student in students:
         if student["id"] == student_id:
             messagebox.showerror("Error", "Student ID already exists!")
@@ -31,53 +47,78 @@ def register_student():
     }
 
     students.append(student)
-    messagebox.showinfo("Success", "Student Registered Successfully!")
-
+    save_students()
+    refresh_table()
     clear_fields()
 
+    messagebox.showinfo("Success", "Student Registered Successfully!")
+    
 # ----------------------------
-# View All Students Function
+# Delete Student
 # ----------------------------
-def view_students():
-    output.delete("1.0", tk.END)
+def delete_student():
+    selected_item = tree.selection()
 
-    if not students:
-        output.insert(tk.END, "No students registered yet.\n")
+    if not selected_item:
+        messagebox.showwarning("Selection Error", "Please select a student to delete.")
         return
 
-    for student in students:
-        output.insert(tk.END,
-                      f"Name: {student['name']}\n"
-                      f"ID: {student['id']}\n"
-                      f"Phone: {student['phone']}\n"
-                      f"Course: {student['course']}\n"
-                      "----------------------\n")
+    confirm = messagebox.askyesno("Confirm Delete", "Are you sure you want to delete this student?")
 
+    if not confirm:
+        return
+
+    item = tree.item(selected_item)
+    student_id = item["values"][1]  # ID is second column
+
+    # Remove student from list
+    for student in students:
+        if student["id"] == student_id:
+            students.remove(student)
+            break
+
+    save_students()
+    refresh_table()
+
+    messagebox.showinfo("Deleted", "Student deleted successfully.")
 # ----------------------------
-# Search Student Function
+# Search Student
 # ----------------------------
 def search_student():
     search_id = search_entry.get()
 
-    if search_id == "":
-        messagebox.showwarning("Input Error", "Please enter a Student ID to search!")
-        return
+    for row in tree.get_children():
+        tree.delete(row)
 
     for student in students:
         if student["id"] == search_id:
-            output.delete("1.0", tk.END)
-            output.insert(tk.END,
-                          f"Student Found:\n\n"
-                          f"Name: {student['name']}\n"
-                          f"ID: {student['id']}\n"
-                          f"Phone: {student['phone']}\n"
-                          f"Course: {student['course']}\n")
+            tree.insert("", tk.END, values=(
+                student["name"],
+                student["id"],
+                student["phone"],
+                student["course"]
+            ))
             return
 
     messagebox.showerror("Not Found", "Student not found!")
 
 # ----------------------------
-# Clear Input Fields
+# Refresh Table
+# ----------------------------
+def refresh_table():
+    for row in tree.get_children():
+        tree.delete(row)
+
+    for student in students:
+        tree.insert("", tk.END, values=(
+            student["name"],
+            student["id"],
+            student["phone"],
+            student["course"]
+        ))
+
+# ----------------------------
+# Clear Fields
 # ----------------------------
 def clear_fields():
     name_entry.delete(0, tk.END)
@@ -86,51 +127,76 @@ def clear_fields():
     course_entry.delete(0, tk.END)
 
 # ----------------------------
-# Create Main Window
+# Main Window
 # ----------------------------
 root = tk.Tk()
 root.title("Student Management System")
-root.geometry("600x550")
+root.geometry("800x500")
+root.resizable(False, False)
+
+# Style
+style = ttk.Style()
+style.theme_use("clam")
+
+# Load students
+students = load_students()
+
+# ----------------------------
+# Frames
+# ----------------------------
+input_frame = ttk.LabelFrame(root, text="Register Student")
+input_frame.place(x=20, y=20, width=350, height=300)
+
+table_frame = ttk.LabelFrame(root, text="Student Records")
+table_frame.place(x=400, y=20, width=370, height=440)
+
+search_frame = ttk.LabelFrame(root, text="Search Student")
+search_frame.place(x=20, y=340, width=350, height=120)
 
 # ----------------------------
 # Input Fields
 # ----------------------------
-tk.Label(root, text="Name").pack()
-name_entry = tk.Entry(root)
+ttk.Label(input_frame, text="Name:").pack(pady=5)
+name_entry = ttk.Entry(input_frame)
 name_entry.pack()
 
-tk.Label(root, text="Student ID").pack()
-id_entry = tk.Entry(root)
+ttk.Label(input_frame, text="Student ID:").pack(pady=5)
+id_entry = ttk.Entry(input_frame)
 id_entry.pack()
 
-tk.Label(root, text="Phone").pack()
-phone_entry = tk.Entry(root)
+ttk.Label(input_frame, text="Phone:").pack(pady=5)
+phone_entry = ttk.Entry(input_frame)
 phone_entry.pack()
 
-tk.Label(root, text="Course").pack()
-course_entry = tk.Entry(root)
+ttk.Label(input_frame, text="Course:").pack(pady=5)
+course_entry = ttk.Entry(input_frame)
 course_entry.pack()
 
-# ----------------------------
-# Buttons
-# ----------------------------
-tk.Button(root, text="Register Student", command=register_student).pack(pady=5)
-tk.Button(root, text="View Students", command=view_students).pack(pady=5)
-
+ttk.Button(input_frame, text="Register Student", command=register_student).pack(pady=10)
+ttk.Button(table_frame, text="Delete Selected", command=delete_student).pack(pady=10)
 # ----------------------------
 # Search Section
 # ----------------------------
-tk.Label(root, text="Search by Student ID").pack(pady=5)
-search_entry = tk.Entry(root)
+ttk.Label(search_frame, text="Enter Student ID:").pack(pady=5)
+search_entry = ttk.Entry(search_frame)
 search_entry.pack()
 
-tk.Button(root, text="Search Student", command=search_student).pack(pady=5)
+ttk.Button(search_frame, text="Search", command=search_student).pack(pady=5)
 
 # ----------------------------
-# Output Area
+# Table (Professional View)
 # ----------------------------
-output = tk.Text(root, height=12)
-output.pack(pady=10)
+columns = ("Name", "ID", "Phone", "Course")
 
-# Run the application
+tree = ttk.Treeview(table_frame, columns=columns, show="headings")
+
+for col in columns:
+    tree.heading(col, text=col)
+    tree.column(col, width=80)
+
+tree.pack(fill="both", expand=True)
+
+# Load data into table at startup
+refresh_table()
+
 root.mainloop()

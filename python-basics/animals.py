@@ -21,7 +21,7 @@ class Animal():
 
 class Dog(Animal):
 
-    def __init__(self,species,weight,food):
+    def __init__(self,species,weight,food, color, height, breed):
         super().__init__(species,weight,food)
         self.color = color
         self.height = height
@@ -32,8 +32,15 @@ class Dog(Animal):
 
 class Horse(Animal):
 
-    def __init__(self,species,weight,food):
-        super().__init__(species,weight,food,color,breed)
+    def __init__(self,species,weight,food, color, breed):
+        super().__init__(species,weight,food)
+        self.color = color
+        self.breed = breed
 
     def neighs(self):
         print("The horse says NEIGH NEIGH!")
+
+
+# Create an instance of the object
+mat = Horse("abd", 3000, 200, "White", "dba")
+mat.neighs()
