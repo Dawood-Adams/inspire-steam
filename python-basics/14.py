@@ -16,7 +16,7 @@ class StudentSystem:
         form_frame = tk.Frame(root, bg="lightblue")
         form_frame.pack(pady=10)
 
-        tk.Label(form_frame, text="Student ID:", bg="white",
+        tk.Label(form_frame, text="Student ID:", bg="lightblue",
                  font=("Arial", 12)).grid(row=0, column=0, padx=10, pady=5, sticky="w")
         self.student_id = tk.Entry(form_frame, font=("Arial", 12))
         self.student_id.grid(row=0, column=1, padx=10, pady=5)
