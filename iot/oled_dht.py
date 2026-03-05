@@ -1,12 +1,29 @@
+"""
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Raspberry Pi Pico SSD1306 OLED Display (MicroPython)     ┃
+┃                                                          ┃
+┃ A program to display Raspberry Pi logo, text, and a      ┃
+┃ simple timer animation on an SSD1306 OLED display        ┃
+┃ connected to a Raspberry Pi Pico.                        ┃
+┃                                                          ┃
+┃ Copyright (c) 2023 Anderson Costa                        ┃
+┃ GitHub: github.com/arcostasi                             ┃
+┃ License: MIT                                             ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+"""
+
 from machine import Pin, I2C
 from ssd1306 import SSD1306_I2C
 import framebuf, sys
 import utime
 import dht
 from time import sleep
+from picozero import Speaker
 
 pix_res_x = 128
 pix_res_y = 64
+
+speaker = Speaker(21)
 
 sensor = dht.DHT22(Pin(14))
 temp = 25
@@ -82,7 +99,10 @@ def main():
             display_logo(oled)
             display_text(oled)
             display_anima(oled, start_time)
-
+            speaker.on()
+            sleep(1)
+            speaker.off()
+            sleep(1)
             oled.show()
             sleep(1)
 
