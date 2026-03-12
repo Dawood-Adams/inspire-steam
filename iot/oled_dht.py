@@ -1,115 +1,78 @@
-"""
-┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ Raspberry Pi Pico SSD1306 OLED Display (MicroPython)     ┃
-┃                                                          ┃
-┃ A program to display Raspberry Pi logo, text, and a      ┃
-┃ simple timer animation on an SSD1306 OLED display        ┃
-┃ connected to a Raspberry Pi Pico.                        ┃
-┃                                                          ┃
-┃ Copyright (c) 2023 Anderson Costa                        ┃
-┃ GitHub: github.com/arcostasi                             ┃
-┃ License: MIT                                             ┃
-┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-"""
+from machine import Pin, PWM, I2C
+import ssd1306
+import time
 
-from machine import Pin, I2C
-from ssd1306 import SSD1306_I2C
-import framebuf, sys
-import utime
-import dht
-from time import sleep
-from picozero import Speaker
+#--- I2C & OLED Setup ---
+i2c    = I2C(0, scl=Pin(1), sda=Pin(0), freq=400000)
+oled  = ssd1306.SSD1306_I2C(128, 64, i2c)
 
-pix_res_x = 128
-pix_res_y = 64
+#--- RGB LED Pins ---
+red   = PWM(Pin(13))
+green = PWM(Pin(14))
+blue  = PWM(Pin(15))
+red.freq(1000)
+green.freq(1000)
+blue.freq(1000)
 
-speaker = Speaker(21)
+#--- Buzzer Pin --
+buzzer = PWM(Pin(12))
+buzzer.freq(500)
 
-sensor = dht.DHT22(Pin(14))
-temp = 25
-hum = 78
+#--- Color Function ---
+def set_color(r, g, b):
+    red.duty_u16(int(r / 255 * 65535))
+    green.duty_u16(int(g / 255 * 65535))
+    blue.duty_u16(int(b / 255 * 65535))
 
-def init_i2c(scl_pin, sda_pin):
-    # Initialize I2C device
-    i2c_dev = I2C(1, scl=Pin(scl_pin), sda=Pin(sda_pin), freq=200000)
-    i2c_addr = [hex(ii) for ii in i2c_dev.scan()]
+#--- Buzzer Beep ---
+def buzzer_beep():
+    buzzer.duty_u16(590)
+    time.sleep(1)
+    buzzer.duty_u16(900)
+    buzzer.duty_u16(100)
     
-    if not i2c_addr:
-        print('No I2C Display Found')
-        sys.exit()
-    else:
-        print("I2C Address      : {}".format(i2c_addr[0]))
-        print("I2C Configuration: {}".format(i2c_dev))
-    
-    return i2c_dev
 
-def display_logo(oled):
-    # Display the Raspberry Pi logo on the OLED
-    buffer = bytearray(b"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00|?\x00\x01\x86@\x80\x01\x01\x80\x80\x01\x11\x88\x80\x01\x05\xa0\x80\x00\x83\xc1\x00\x00C\xe3\x00\x00~\xfc\x00\x00L'\x00\x00\x9c\x11\x00\x00\xbf\xfd\x00\x00\xe1\x87\x00\x01\xc1\x83\x80\x02A\x82@\x02A\x82@\x02\xc1\xc2@\x02\xf6>\xc0\x01\xfc=\x80\x01\x18\x18\x80\x01\x88\x10\x80\x00\x8c!\x00\x00\x87\xf1\x00\x00\x7f\xf6\x00\x008\x1c\x00\x00\x0c \x00\x00\x03\xc0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00")
-    fb = framebuf.FrameBuffer(buffer, 32, 32, framebuf.MONO_HLSB)
-    
-    oled.fill(0)
-    oled.blit(fb, 96, 0)
-    oled.show()
+#--- OLED Message Function ---
+def show_message(line1="", line2="", line3="", line4=""):
+    oled.fill(0)                  # Clear screen
+    oled.text(line1, 0,  0)       # Line 1 - top
+    oled.text(line2, 0, 16)       # Line 2
+    oled.text(line3, 0, 32)       # Line 3
+    oled.text(line4, 0, 48)       # Line 4 - bottom
+    oled.show()                   # Push to display
 
+#--- Color List ---
+colors = [
+    ("Dawood",    255,   0,   0),
+    ("Dylan",    0, 255,   0),
+    ("Daniel",     0,   0, 255),
+    ("Dawn", 255, 255,   0),
+    ("Ndegeee",     0, 255, 255),
+    ("Wanjee", 128,   0, 128),
+    ("Leon",  255, 255, 255),
+    ("Clement", 255, 165,   0),
+]
 
+#--- Startup Message ---
+show_message("  PICO PROJECT", "----------------", " LED + BUZZER", "  + OLED READY!")
+buzzer_beep()
+time.sleep(2)
 
+#--- Main Loop ---
+while True:
+    for name, r, g, b in colors:
+        print(f"Group M: {name}")
+        set_color(r, g, b)
+        buzzer_beep()
+        show_message(
+            "ALL BLACKS",
+            "----------------",
+            f"  Now: {name}",
+            "  WEKA  MAWE :)"
+        )
+        time.sleep(1.5)
 
-def display_text(oled):
-    # Display text on the OLED
-    oled.text("Temp :", 5, 5)
-    oled.text(str(temp), 60, 5)
-    oled.text("Hum :", 5, 15)
-    oled.text(str(hum), 60, 15)
-    oled.show()
-
-def display_anima(oled, start_time):
-    # Display a simple timer animation on the OLED
-       
-    elapsed_time = (utime.ticks_diff(utime.ticks_ms(), start_time) // 1000) + 1
-        
-        # Clear the specific line by drawing a filled black rectangle
-        
-
-    oled.text("Timer:", 5, 30)
-    oled.text(str(elapsed_time) + " sec", 5, 40)
-     
-
-def main():
-    global temp, hum
-    i2c_dev = init_i2c(scl_pin=27, sda_pin=26)
-    oled = SSD1306_I2C(pix_res_x, pix_res_y, i2c_dev)
-
-    sleep(1)
-
-    start_time = utime.ticks_ms()
-
-
-    while True:
-        try:
-            sleep(2)
-            sensor.measure()
-            temp = sensor.temperature()
-            hum = sensor.humidity()
-            temp_f = temp * (9/5) + 32.0
-            print('Temperature:%3.1f C' %temp)
-            print('Temperature: %3.1f F' %temp_f)
-            print('Humidity: %3.1f %%' %hum)
-            oled.fill(0)
-            display_logo(oled)
-            display_text(oled)
-            display_anima(oled, start_time)
-            speaker.on()
-            sleep(1)
-            speaker.off()
-            sleep(1)
-            oled.show()
-            sleep(1)
-
-        except OSError as e:
-            print('Failed to read sensor')
-            sleep(1)
-
-    
-if __name__ == '__main__':
-    main()
+    # --- Reset ---
+    set_color(0, 0, 0)
+    show_message("   ALL DONE!",  "----------------", " Restarting...", "")
+    time.sleep(1)

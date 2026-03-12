@@ -7,6 +7,7 @@ class Student_system:
         self.root = root
         self.root.title("School Management System")
         self.root.geometry("600x450")
+        self.root.configure(bg = "yellow", fg = "green")
         root = Tk()
         frame_one = Frame(root)
         frame_one.pack()
