@@ -1,11 +1,11 @@
-from machine import Pin, PWM, I2C
+from machine import Pin, PWM, I2C, ADC
 import ssd1306
 import time
-
+from time import sleep
 #--- I2C & OLED Setup ---
 i2c    = I2C(0, scl=Pin(1), sda=Pin(0), freq=400000)
 oled  = ssd1306.SSD1306_I2C(128, 64, i2c)
-
+light = ADC(Pin(28))
 #--- RGB LED Pins ---
 red   = PWM(Pin(13))
 green = PWM(Pin(14))
@@ -14,6 +14,14 @@ red.freq(1000)
 green.freq(1000)
 blue.freq(1000)
 
+while True:
+    light_value = light.read_u16()
+    print(light_value)
+    oled.text('Light Sensor' , 0, 0)
+    oled.text('Light ', 0, 10)
+    oled.text(str(light_value), 50, 20)
+    oled.show()
+    sleep(0.1)
 #--- Buzzer Pin --
 buzzer = PWM(Pin(12))
 buzzer.freq(500)
