@@ -4,6 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Module05: classes, ids</title>
+
+    <style>
+        body {background-color: black;
+            color: darkgoldenrod;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            margin: 0%;
+            padding: 0%;
+        }
+        #page-wrapper{
+            max-width: 700px;
+            margin-left: 350px ;
+            padding: 60px 24px;
+
+        }
+        .band-photos{
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 100% ;
+            border: solid 5px crimson;
+        }
+        #Listen{
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            background-color: brown;
+        }
+        #read-along{
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 40px 24px
+            
+        }
+        #fan-page{
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            color: darkorange;
+            font-size: x-large;
+            background-color: burlywood;
+            border-radius: 10%;
+            border: solid 20px brown;
+        }
+        
+    </style>
 </head>
 <body>
     <!--
@@ -13,16 +58,41 @@
     <div id="page-wrapper">
         <h1>Earthgang</h1>
         <p>Disc: Band from the suburbs of East Atlanta, revolutionizing Hiphop in America</p>
-
-        <img class="band-photos" src="./assets/images/Earthgang.jpg" alt="band-photo">
-        <img class="band-photos" src="./assets/images/Earthgang.jpg2.jpg" alt="band-photo">
+        <div class="photos">
+            <img class="band-photos" src="./assets/images/Earthgang.jpg" alt="band-photo">
+            <img class="band-photos" src="./assets/images/Earthgang.jpg2.jpg" alt="band-photo">
+        </div>
     </div>
-    <div id="favourite">
-        <h1>JIDxMereba</h1>
-        <p>Amazing love song from two great artists :JID and Mereba</p>
 
-        <audio class="Song sample" src="./assets/audio/Mereba - Sandstorm ft. JID [KHqsrAPgjO0].mp3" controls></audio>
+    <div id="Listen">
+        <div class="Listen-section">
+            <h1>Sample Song</h1>
+            <p>This is one of their all time greats "Cant Punk Me" in which they collabed with JID</p>
 
+        <audio class="Song sample" src="./assets/audio/JID, EARTHGANG - Can't Punk Me (Official Audio) [nMOQ0CQbbkM].mp3" controls></audio>        
+        </div>
+    </div>
+    <div id="read-along">
+        <h1>Lyrics</h1>
+        <p>A generational collab between JID and Earthgang and here are its Lyrics</p>
+
+        <video class="lyrical" src="./assets/video/JID - Cant Punk Me (Lyrics).mp4" controls></video>
+    </div>
+    <div id="fan-page">
+        <h6><b>Want to join our fan club?</b></h6>
+        <p>You can register with us now.Just fill in your details below.</p>
+        <label for="f_name">Your first name</label>
+        <input type="text"placeholder="Your first name" name="f_name">
+        <br><br>
+        <label for="s_name">Your second name</label>
+        <input type="text"placeholder="Your second name" name="s_name">
+        <br><br>
+        <label for="u_email">Your email</label>
+        <input type="email" name="u_email" placeholder="sample@email.com">
+        <br><br>
+
+        <label for="u_phone">Your phone number</label>
+        <input type="tel" name="u_phone" placeholder="+254741482818">
     </div>
 </body>
 </html>

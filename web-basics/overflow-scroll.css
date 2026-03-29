@@ -1,0 +1,16 @@
+.container{
+    display: flex;
+    border: solid 3px chocolate;
+    height: 380px;
+    width: 350px;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+}
+.box{
+    background-color: rgb(148, 81, 0);
+    min-width: 100px;
+    width: 100px;
+    height: 100px;
+    margin: 8px;
+}
